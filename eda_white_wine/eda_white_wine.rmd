@@ -126,6 +126,15 @@ ggcorr(data_white_wine_origin[,], label = TRUE, label_size = 3, label_round = 2,
 负相关
 1. density 与 alcohol:-0.78
 
+### 探索 total.acidity 与 fixed.acidity 的关系   
+```{r echo=FALSE}
+ggplot(aes(x = fixed.acidity, y = total.acidity), 
+      data = data_white_wine_origin)  + 
+  geom_point(aes(alpha=0.2),position = position_jitter())+
+  geom_smooth(method = 'lm') 
+```
+固定酸度在很大程度上决定了酒中的总酸度的含量
+
 ### 探索 alcohol 与 quality 的关系 
 ```{r}
 ggplot(aes(x = quality, y = alcohol), 
@@ -136,6 +145,50 @@ ggplot(aes(x = quality, y = alcohol),
   geom_smooth(method = 'lm', aes(group = 1)) 
 ```
 随着质量的提升，酒精含量也相对更高
+
+### 探索 residual.sugar 与 quality 的关系 
+```{r}
+ggplot(aes(x = quality, y = residual.sugar), 
+      data = data_white_wine_origin)  + 
+  geom_boxplot(alpha = 0.2, color = "blue") + 
+  geom_jitter(alpha = 0.2) + 
+  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
+  geom_smooth(method = 'lm', aes(group = 1)) 
+```
+随着质量的提升，残糖含量有下降，但不是很明显
+
+### 探索 total.acidity 与 quality 的关系 
+```{r}
+ggplot(aes(x = quality, y = total.acidity), 
+      data = data_white_wine_origin)  + 
+  geom_boxplot(alpha = 0.2, color = "blue") + 
+  geom_jitter(alpha = 0.2) + 
+  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
+  geom_smooth(method = 'lm', aes(group = 1)) 
+```
+
+
+### 探索 total.sulfur.dioxide 与 quality 的关系 
+```{r}
+ggplot(aes(x = quality, y = total.sulfur.dioxide), 
+      data = data_white_wine_origin)  + 
+  geom_boxplot(alpha = 0.2, color = "blue") + 
+  geom_jitter(alpha = 0.2) + 
+  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
+  geom_smooth(method = 'lm', aes(group = 1)) 
+```
+
+### 探索 density 与 quality 的关系 
+```{r}
+ggplot(aes(x = quality, y = density), 
+      data = data_white_wine_origin)  + 
+  geom_boxplot(alpha = 0.2, color = "blue") + 
+  geom_jitter(alpha = 0.2) + 
+  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
+  geom_smooth(method = 'lm', aes(group = 1)) 
+```
+1. 密度（density） 的范围基本上在0.99-1.00之间，各种酒之间的差别非常非常小
+2. 密度和质量呈现非常小的负相关，猜测：粘稠的酒口感会弱一些
 
 ### 探索 residual.sugar 与 density 的关系   
 ```{r echo=FALSE}
@@ -165,6 +218,24 @@ ggplot(aes(x = density, y = alcohol),
 ```
 酒精与白葡萄酒的密度成明显的负相关，随着白葡萄的密度增大，酒精含量反而下降了。
 
+### 探索 pH 与 density 的关系   
+```{r echo=FALSE}
+ggplot(aes(x = pH, y = density), 
+      data = data_white_wine_origin)  + 
+  geom_point(aes(alpha=0.2),position = position_jitter())+
+  geom_smooth(method = 'lm') 
+```
+pH与密度不相关
+
+### 探索 total.acidity 与 density 的关系   
+```{r echo=FALSE}
+ggplot(aes(x = total.acidity, y = density), 
+      data = data_white_wine_origin)  + 
+  geom_point(aes(alpha=0.2),position = position_jitter())+
+  geom_smooth(method = 'lm') 
+```
+酸度与密度呈现弱相关，酸度越高，密度越大
+
 ### 残糖与酒精
 ```{r echo=FALSE}
 ggplot(aes(x=residual.sugar, y=alcohol), data=data_white_wine_origin)+
@@ -173,6 +244,15 @@ ggplot(aes(x=residual.sugar, y=alcohol), data=data_white_wine_origin)+
 ```
 残糖与酒精呈现弱的负相关
 
+### alcohol 和  total.acidity
+```{r echo=FALSE}
+ggplot(aes(x=alcohol, y=total.acidity), data=data_white_wine_origin)+
+  geom_point(aes(alpha=0.2),position = position_jitter())+
+  geom_smooth(method = 'lm', color='blue')
+```
+不相关性，但是酒精含量的范围看起来有点像个离散的量
+猜测：可能是因为检测仪器的精度导致
+
 ### alcohol 和  total.sulfur.dioxide
 ```{r echo=FALSE}
 ggplot(aes(x=alcohol, y=total.sulfur.dioxide), data=data_white_wine_origin)+
@@ -180,7 +260,7 @@ ggplot(aes(x=alcohol, y=total.sulfur.dioxide), data=data_white_wine_origin)+
   geom_smooth(method = 'lm', color='blue')
 ```
 
-酒精和二氧化硫总量好像没啥关系
+酒精和二氧化硫总量呈现微弱的负相关
 
 ### pH 与alcohol
 ```{r echo=FALSE}
@@ -188,7 +268,7 @@ ggplot(aes(x=pH, y=alcohol), data=data_white_wine_origin)+
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm', color='blue')
 ```
-pH与酒精含量没关系
+pH与酒精含量也没啥关系
 
 # 双变量分析
 
@@ -311,7 +391,7 @@ ggplot(aes(x = alcohol, y = density, color = quality), data = data_white_wine_or
 ```{r echo=FALSE}
 ggplot(aes(x = density, y = alcohol), 
       data = data_white_wine_origin)  + 
-  geom_point(aes(alpha=0.2),position = position_jitter())+
+  geom_point(aes(alpha=0.2, color=I('#F79420')),position = position_jitter())+
   xlim(c(0.98,1.01))+
   geom_smooth(method = 'lm')+
   ggtitle("Alcohol by Density") + 
