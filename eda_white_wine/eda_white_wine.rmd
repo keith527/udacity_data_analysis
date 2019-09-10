@@ -19,6 +19,7 @@ library(knitr)
 
 ```
 ```{r set theme }
+# 设置样式
 theme_set(theme_minimal(5))
 ```
 
@@ -37,6 +38,7 @@ names(data_white_wine_origin)
 # 单变量绘图选择
 ### 绘制各直方图
 ```{r echo=FALSE, Univariate_Plots}
+# 先用一整张图查看所有单个变量的大致分布情况，如果发现有特别的再单独作图
 p1.1 <- qplot(x=fixed.acidity, data=data_white_wine_origin)
 p1.2 <- qplot(x=volatile.acidity, data=data_white_wine_origin)
 p1.3 <- qplot(x=citric.acid, data=data_white_wine_origin)
@@ -52,26 +54,49 @@ p1.12 <- qplot(x=quality, data=data_white_wine_origin)
 grid.arrange(p1.1, p1.2, p1.3, p1.4, p1.5, p1.6, p1.7, p1.8, p1.9, p1.10, p1.11, p1.12, ncol=3)
 ```
 
+由图可知：
+各变量几乎都服从正态分布
+
 ### 查看各变量统计值
-```{r echo=FALSE,}
+```{r }
 summary(data_white_wine_origin)
 ```
+
 ### 创建一个新的变量 is.sweet
-创建变量记录每只酒是否是甜的
-超过45克/升的葡萄酒被认为是甜的
-```{r echo=FALSE}
+
+```{r}
+# 创建变量记录每只酒是否是甜的，超过45克/升的葡萄酒被认为是甜的
 data_white_wine_origin$is.sweet <- ifelse(data_white_wine_origin$residual.sugar>45,1,0)
 data_white_wine_origin$is.sweet <- factor(data_white_wine_origin$is.sweet)
 ```
+
 ### 看下有多少甜的
-```{r echo=FALSE}
+```{r}
 summary(data_white_wine_origin$is.sweet)
 ```
+
 ### 创建一个新的变量 总酸度
 ```{r}
 data_white_wine_origin$total.acidity <- data_white_wine_origin$fixed.acidity+data_white_wine_origin$volatile.acidity+data_white_wine_origin$citric.acid
 summary(data_white_wine_origin$total.acidity)
 ```
+
+### 将质量变量设置为离散
+```{r}
+data_white_wine_origin$quality <- factor(data_white_wine_origin$quality)
+```
+
+
+### 查看质量分布
+```{r echo=FALSE}
+# 绘制质量分布的直方图
+qplot(x=quality, data=data_white_wine_origin)
+```
+
+由图可知：
+1. 白葡萄酒数据集的“质量”分布大致遵循正态分布；
+2. 大量数据集中在 5，6，7 分，其中6分的数量最多，数量超过 2000；
+3. 最低的评分为 3 分，最高评分为 8 分
 
 # 单变量分析
 
@@ -114,9 +139,11 @@ total.acidity:总酸度 = fixed.acidity + volatile.acidity + citric.acid
 
 ### 相关性计算
 ```{r echo=FALSE, Bivariate_Plots}
+# 绘制所有变量的相关性的图表，方便一次性找出有较强相关性的变量
 ggcorr(data_white_wine_origin[,], label = TRUE, label_size = 3, label_round = 2, hjust = 0.85)
 ```
-相关性比较大的变量为：
+
+由图可知：
 正相关
 1. total.acidity 与 fixed.acidity：0.99
 2. redidual.sugar 与 density :0.84
@@ -128,146 +155,206 @@ ggcorr(data_white_wine_origin[,], label = TRUE, label_size = 3, label_round = 2,
 
 ### 探索 total.acidity 与 fixed.acidity 的关系   
 ```{r echo=FALSE}
+# 绘制总酸度和固定酸度的散单图，通过透明度来呈现效果
+# 添加了回归线图层
 ggplot(aes(x = fixed.acidity, y = total.acidity), 
       data = data_white_wine_origin)  + 
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm') 
 ```
-固定酸度在很大程度上决定了酒中的总酸度的含量
+
+由图可知：
+总酸度与固定酸度呈现强正相关，随fixed.acidity的增大，total.acidity 也随之提高
 
 ### 探索 alcohol 与 quality 的关系 
-```{r}
+```{r echo=FALSE}
 ggplot(aes(x = quality, y = alcohol), 
       data = data_white_wine_origin)  + 
-  geom_boxplot(alpha = 0.2, color = "blue") + 
-  geom_jitter(alpha = 0.2) + 
-  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
-  geom_smooth(method = 'lm', aes(group = 1)) 
+  # 设置透明度来观察数据点
+  geom_boxplot(alpha = 0.1,color='orange') + 
+  # 设置抖动来添加噪声，并设置 α 透明度
+  geom_jitter(alpha = 0.1) + 
+  stat_summary(fun.y = mean, geom = 'point', color = "red")
 ```
-随着质量的提升，酒精含量也相对更高
+
+由图可知
+1. 质量低于 5 的，随着质量的提升，酒精含量降低
+2. 质量高于 5 的，随着质量的提升，酒精含量也相对更高
+数据集中没有 1，2，10的质量等级，并且质量为 3，4，9的数据点很少，所以结论可能有较大误差
 
 ### 探索 residual.sugar 与 quality 的关系 
-```{r}
+```{r echo=FALSE}
 ggplot(aes(x = quality, y = residual.sugar), 
       data = data_white_wine_origin)  + 
-  geom_boxplot(alpha = 0.2, color = "blue") + 
-  geom_jitter(alpha = 0.2) + 
-  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
-  geom_smooth(method = 'lm', aes(group = 1)) 
+   # 设置透明度来观察数据点
+  geom_boxplot(alpha = 0.1,color='orange') + 
+  # 设置抖动来添加噪声，并设置 α 透明度
+  geom_jitter(alpha = 0.1) + 
+  stat_summary(fun.y = mean, geom = 'point', color = "red")
 ```
-随着质量的提升，残糖含量有下降，但不是很明显
+
+由图可知
+随着质量的提升，残糖含量有一些变化，但没有明显的线性关系
 
 ### 探索 total.acidity 与 quality 的关系 
-```{r}
+```{r echo=FALSE}
 ggplot(aes(x = quality, y = total.acidity), 
       data = data_white_wine_origin)  + 
-  geom_boxplot(alpha = 0.2, color = "blue") + 
-  geom_jitter(alpha = 0.2) + 
-  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
-  geom_smooth(method = 'lm', aes(group = 1)) 
+   # 设置透明度来观察数据点
+  geom_boxplot(alpha = 0.1,color='orange') + 
+  # 设置抖动来添加噪声，并设置 α 透明度
+  geom_jitter(alpha = 0.1) + 
+  stat_summary(fun.y = mean, geom = 'point', color = "red")
 ```
 
+由图可知
+1. 随着质量的提升，总酸度有下降，但不是特别明显
+2. 在质量为 8、9 的时候，总酸度随质量增加而略微有增加
+考虑 质量为 9的数据点过少，不能由此推断结论
 
 ### 探索 total.sulfur.dioxide 与 quality 的关系 
-```{r}
+```{r echo=FALSE}
 ggplot(aes(x = quality, y = total.sulfur.dioxide), 
       data = data_white_wine_origin)  + 
-  geom_boxplot(alpha = 0.2, color = "blue") + 
-  geom_jitter(alpha = 0.2) + 
-  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
-  geom_smooth(method = 'lm', aes(group = 1)) 
+   # 设置透明度来观察数据点
+  geom_boxplot(alpha = 0.1,color='orange') + 
+  # 设置抖动来添加噪声，并设置 α 透明度
+  geom_jitter(alpha = 0.1) + 
+  stat_summary(fun.y = mean, geom = 'point', color = "red")
 ```
+
+由图可知
+随着质量的提升，总二氧化硫有波动，但没有明显的线性关系
 
 ### 探索 density 与 quality 的关系 
 ```{r}
 ggplot(aes(x = quality, y = density), 
       data = data_white_wine_origin)  + 
-  geom_boxplot(alpha = 0.2, color = "blue") + 
-  geom_jitter(alpha = 0.2) + 
-  #stat_summary(fun.y = mean, geom = 'point', shape = 4, color = "red") + 
-  geom_smooth(method = 'lm', aes(group = 1)) 
+   # 设置透明度来观察数据点
+  geom_boxplot(alpha = 0.1,color='orange') + 
+  # 设置抖动来添加噪声，并设置 α 透明度
+  geom_jitter(alpha = 0.1) + 
+  stat_summary(fun.y = mean, geom = 'point', color = "red")
 ```
+
+由图可知：
 1. 密度（density） 的范围基本上在0.99-1.00之间，各种酒之间的差别非常非常小
-2. 密度和质量呈现非常小的负相关，猜测：粘稠的酒口感会弱一些
+2. 密度和质量呈现弱的负相关关系
 
 ### 探索 residual.sugar 与 density 的关系   
 ```{r echo=FALSE}
+# 图层1:残糖和密度的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x = residual.sugar, y = density), 
       data = data_white_wine_origin)  + 
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm') 
 ```
-可以看出残糖和密度之间很明显的线性关系，随着残糖含量的提升，密度将会变大，可能会造成口感上更粘稠和厚重。
+
+由图可知：
+残糖和密度之间很明显的线性关系，随着残糖含量的提升，密度将会变大
 
 ### 探索 total.sulfur.dioxide 与 density 的关系   
 ```{r echo=FALSE}
+# 图层1:总二氧化硫和密度的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x = total.sulfur.dioxide, y = density), 
       data = data_white_wine_origin)  + 
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm') 
 ```
+
+由图可知：
 密度与二氧化硫总量正相关
 
 ### 探索 density 与 alcohol 的关系 
 ```{r echo=FALSE}
+# 图层1:密度和酒精含量的散点图，通过透明度来呈现效果
+# 图层2:回归线
+# 为了看的更清楚给x轴做了限制，去除了极限值（3个数据点），只展示酒精含量在0.98-1.01之间的数据
 ggplot(aes(x = density, y = alcohol), 
       data = data_white_wine_origin)  + 
   geom_point(aes(alpha=0.2),position = position_jitter())+
   xlim(c(0.98,1.01))+
   geom_smooth(method = 'lm') 
 ```
+
+由图可知：
 酒精与白葡萄酒的密度成明显的负相关，随着白葡萄的密度增大，酒精含量反而下降了。
 
 ### 探索 pH 与 density 的关系   
 ```{r echo=FALSE}
+# 图层1:pH值和密度的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x = pH, y = density), 
       data = data_white_wine_origin)  + 
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm') 
 ```
-pH与密度不相关
+
+由图可知：
+pH与密度完全不相关
 
 ### 探索 total.acidity 与 density 的关系   
 ```{r echo=FALSE}
+# 图层1:总酸度和密度的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x = total.acidity, y = density), 
       data = data_white_wine_origin)  + 
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm') 
 ```
-酸度与密度呈现弱相关，酸度越高，密度越大
+
+由图可知：
+总酸度与密度呈现弱相关度越高，总酸度越大，密度随着越大
 
 ### 残糖与酒精
 ```{r echo=FALSE}
+# 图层1:残糖含量和酒精含量的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x=residual.sugar, y=alcohol), data=data_white_wine_origin)+
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm', color='blue')
 ```
+
+由图可知：
 残糖与酒精呈现弱的负相关
 
 ### alcohol 和  total.acidity
 ```{r echo=FALSE}
+# 图层1:酒精含量和总酸度的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x=alcohol, y=total.acidity), data=data_white_wine_origin)+
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm', color='blue')
 ```
-不相关性，但是酒精含量的范围看起来有点像个离散的量
-猜测：可能是因为检测仪器的精度导致
+
+由图可知：
+1. 酒精含量与总酸度之间不相关性，
+2. 酒精含量的范围看起来有点像个离散的量，猜测：可能是因为检测仪器的精度导致
 
 ### alcohol 和  total.sulfur.dioxide
 ```{r echo=FALSE}
+# 图层1:酒精含量和总二氧化硫的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x=alcohol, y=total.sulfur.dioxide), data=data_white_wine_origin)+
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm', color='blue')
 ```
 
+由图可知：
 酒精和二氧化硫总量呈现微弱的负相关
 
 ### pH 与alcohol
 ```{r echo=FALSE}
+# 图层1:pH值和酒精含量的散点图，通过透明度来呈现效果
+# 图层2:回归线
 ggplot(aes(x=pH, y=alcohol), data=data_white_wine_origin)+
   geom_point(aes(alpha=0.2),position = position_jitter())+
   geom_smooth(method = 'lm', color='blue')
 ```
+
+由图可知：
 pH与酒精含量也没啥关系
 
 # 双变量分析
@@ -288,90 +375,101 @@ pH与酒精含量也没啥关系
 
 # 多变量绘图选择
 
-```{r echo=FALSE, Multivariate_Plots}
-names(data_white_wine_origin)
-```
-
 考虑在双变量分析中有明显相关性的两组变量散点图上添加颜色来表示酒的质量来观察三者间的关系
+
+
 ### 探索 alcohol、density 和 quality之间的关系
-```{r echo=FALSE}
-ggplot(aes(x = alcohol, y = density, color = quality), data = data_white_wine_origin) + 
-  geom_jitter(alpha = 0.25, color=I('#F79420')) + 
-  geom_smooth(method = "lm", se = FALSE,size=1) + 
-  ylim(0.985, 1.005) + 
+```{r echo=FALSE, Multivariate_Plots}
+# 绘制酒精、密度之间的散点图，质量评分由颜色深浅表示
+ggplot(aes(x = density, y = alcohol, color = quality), data = data_white_wine_origin) + 
+  geom_jitter() + 
+  # 通过设置xlim来放大，因为密度具有很远的异常值
+  coord_cartesian(xlim=c(0.985, 1.0))+
+  # 颜色编码
+  scale_color_brewer(type = 'div', palette = 'PuQr')+
+  # 深色背景
+  theme_dark()+
   labs(y = 'Density',x = 'Alcohol') + 
   ggtitle("density VS alcohol VS quality")
 ```
-如图可以看出：
-当酒精含量（alcohol）一定时，密度（density）越高，quality的颜色越深，也就是说质量更高
+
+由图可知：
+1. 当酒精含量（alcohol）一定时，密度（density）越高，quality的颜色越深，也就是说质量更高
+2. 当密度一定时，酒精含量越高，没有很明显的质量变化趋势
 
 ### 探索 residual.sugar，density，和quality 的关系    
 ```{r echo=FALSE}
-ggplot(aes(x = residual.sugar, y = density, color = quality), 
+ggplot(aes(x = density, y = residual.sugar, color = quality), 
        data = data_white_wine_origin) + 
-  geom_jitter(alpha = 0.25,color=I('#F79420')) + 
-  xlim(0,40)+
-  ylim(0.985, 1.005)+
-  geom_smooth(method = "lm", se = FALSE,size=1) + 
+  geom_jitter() + 
+  # 通过设置xlim来放大x轴，因为密度具有很远的异常值
+  # 通过设置ylim来放大y轴，因为残糖含量具有很远的异常值
+  coord_cartesian(xlim=c(0.985, 1.0), ylim = c(0,40))+
+  # 颜色编码
+  scale_color_brewer(type = 'div', palette = 'PuQr')+
+  # 深色背景
+  theme_dark()+
   labs(x = 'Residual Sugar',y = 'Density') + 
   ggtitle("Residual Sugar VS Density VS Quality")
 ```
-如图可以看出：
-在残糖含量（residual.sugar）较低的时候，颜色比较深，意味着大多数评分高的酒残糖含量并不高
+
+由图可知：
+1. 在残糖含量（residual.sugar））一定时，密度（density）越高，quality的颜色越深，也就是说质量更高
+2. 当密度一定时，残糖含量（residual.sugar）越高，颜色越浅，也就是质量越低
 
 # 多变量分析
 
 ###  探讨你在这部分探究中观察到的一些关系。通过观察感兴趣的特性，是否存在相互促进的特性？
 
-酒精含量越高的酒评分相对越高，而残糖含量越高的酒评分却越低，所以酒精含量和残糖含量可能是对“冤家”
+1. 质量一定时，酒精含量与酒的质量没有明显的相关性关系
+2. 质量一定时，残糖含量越高的酒的质量却越低
+3. 酒精和残糖含量一定的时候，密度越高，酒的相对质量越高
 
 ### 这些特性之间是否存在有趣或惊人的联系呢？
+
 不知道
 
 ### 选项：你是否创建过数据集的任何模型？讨论你模型的优缺点。
+
 暂时没有。
 ------
 
 # 定稿图与总结
 
 ### 绘图一
-```{r echo=FALSE, Plot_One}
-p1.1 <- qplot(x=total.acidity, data=data_white_wine_origin)
-p1.4 <- qplot(x=residual.sugar, data=data_white_wine_origin)
-p1.5 <- qplot(x=chlorides, data=data_white_wine_origin)
-p1.6 <- qplot(x=free.sulfur.dioxide, data=data_white_wine_origin)
-p1.7 <- qplot(x=total.sulfur.dioxide, data=data_white_wine_origin)
-p1.8 <- qplot(x=density, data=data_white_wine_origin)
-p1.9 <- qplot(x=pH, data=data_white_wine_origin)
-p1.10 <- qplot(x=sulphates, data=data_white_wine_origin)
-p1.11 <- qplot(x=alcohol, data=data_white_wine_origin)
-p1.12 <- qplot(x=quality, data=data_white_wine_origin)
-grid.arrange(p1.1, p1.4, p1.5, p1.6, p1.7, p1.8, p1.9, p1.10, p1.11, p1.12, ncol=3)
+```{r echo=FALSE}
+qplot(x=quality, geom = 'bar',data=data_white_wine_origin)
 ```
 
 ### 描述一
-1. 整体来说，各白葡萄就的指标参数都符合正态分布
-2. 质量评分的范围为[3,9]，5，6，7分的数量占绝大部分，其中又以 6 分最多，表示数据集中的酒质量差别不大
+1. 白葡萄酒数据集的“质量”分布大致遵循正态分布；
+2. 大量数据集中在 5，6，7 分，其中6分的数量最多，数量超过 2000；
+3. 最低的评分为 3 分，最高评分为 8 分。
+
 
 ### 绘图二
-```{r echo=FALSE, Plot_Two}
+```{r echo=FALSE}
 ggplot(aes(x = residual.sugar, y = density), 
       data = data_white_wine_origin)  + 
+  # 绘制散点图，并添加透明度和抖动
   geom_point(aes(alpha=0.2),position = position_jitter())+
+  # 平滑处理，绘制模拟直线
   geom_smooth(method = 'lm') +
   ggtitle("Density by Residual Sugar") + 
-  labs(x = 'Residual Sugar',y = 'Density')
+  labs(x = 'Residual Sugar',y = 'Density(mg/l)')
 ```
 ```{r echo=FALSE}
 ggplot(aes(x = density, y = alcohol), 
       data = data_white_wine_origin)  + 
+  # 绘制散点图，并添加透明度和抖动
   geom_point(aes(alpha=0.2),position = position_jitter())+
-  xlim(c(0.98,1.01))+
+  # 设置x轴，y轴的限制
+  coord_cartesian(xlim = c(0.98,1.01), ylim = c(5,15))+
+  # 平滑处理，绘制模拟直线
   geom_smooth(method = 'lm')+
   ggtitle("Alcohol by Density") + 
-  labs(x = 'Density',y = 'Alcohol')
+  labs(x = 'Density(mg/l)',y = 'Alcohol(% by volume)')
 ```
-
 
 ### 描述二
 这部分主要根据变量之间的相关性和自己的直觉选择一些变量进行观察：
@@ -379,30 +477,40 @@ ggplot(aes(x = density, y = alcohol),
 2.酒精和密度却成负相关，可能因为酒精比水的密度小
 
 ### 绘图三
-```{r echo=FALSE, Plot_Three}
-ggplot(aes(x = alcohol, y = density, color = quality), data = data_white_wine_origin) + 
-  geom_jitter(alpha = 0.25, color=I('#F79420')) + 
-  geom_smooth(method = "lm", se = FALSE,size=1) + 
-  ylim(0.985, 1.005) + 
-  labs(y = 'Density',x = 'Alcohol') + 
+```{r echo=FALSE}
+# 绘制酒精、密度之间的散点图，质量评分由颜色深浅表示
+ggplot(aes(x = density, y = alcohol, color = quality), data = data_white_wine_origin) + 
+  geom_jitter() + 
+  # 通过设置xlim来放大，因为密度具有很远的异常值
+  coord_cartesian(xlim=c(0.985, 1.0))+
+  # 颜色编码
+  scale_color_brewer(type = 'div', palette = 'PuQr')+
+  # 深色背景
+  theme_dark()+
+  labs(y = 'Density(mg/l)',x = 'Alcohol(% by volume)') + 
   ggtitle("density VS alcohol VS quality")
 ```
 
 ```{r echo=FALSE}
-ggplot(aes(x = density, y = alcohol), 
-      data = data_white_wine_origin)  + 
-  geom_point(aes(alpha=0.2, color=I('#F79420')),position = position_jitter())+
-  xlim(c(0.98,1.01))+
-  geom_smooth(method = 'lm')+
-  ggtitle("Alcohol by Density") + 
-  labs(x = 'Density',y = 'Alcohol')
+ggplot(aes(x = density, y = residual.sugar, color = quality), 
+       data = data_white_wine_origin) + 
+  geom_jitter() + 
+  # 通过设置xlim来放大x轴，因为密度具有很远的异常值
+  # 通过设置ylim来放大y轴，因为残糖含量具有很远的异常值
+  coord_cartesian(xlim=c(0.985, 1.0), ylim = c(0,40))+
+  # 颜色编码
+  scale_color_brewer(type = 'div', palette = 'PuQr')+
+  # 深色背景
+  theme_dark()+
+  labs(x = 'Residual Sugar(mg/l)',y = 'Density(mg/l)') + 
+  ggtitle("Residual Sugar VS Density VS Quality")
 ```
 
 
 ### 描述三
-由图可知：
-1. 酒精含量（alcohol）一定时，密度（density）越高，quality的颜色越深，也就是说质量更高
-2.残糖含量（residual.sugar）较低的时候，颜色比较深，意味着大多数评分高的酒残糖含量并不高
+1. 质量一定时，酒精含量与酒的质量没有明显的相关性关系
+2. 质量一定时，残糖含量越高的酒的质量却越低
+3. 酒精和残糖含量一定的时候，随着密度越高，酒的相对质量也越高
 
 ------
 
@@ -414,8 +522,18 @@ ggplot(aes(x = density, y = alcohol),
 1. 评分的因素不完全是口感，而数据集中的因素几乎全与口感相关；
 2. 数据集中提供的指标并不完整
 
+所以在数据集的分析中逐渐抛开了本来预期的方向，转而寻找各化学参数之间是否有存在什么关系，以及这些化学参数的组合关系会对质量产生什么样的影响。
+
+在分析中发现酒的质量与密度存在
+
 ### 遇到的问题
-在R的各种方法使用过程中，并不是特别熟悉，故而有时候并不能很快找到最适合的表现方式，这部分需要再多熟悉。   
+1. 在R的各种方法使用过程中，并不是特别熟悉，故而有时候并不能很快找到最适合的表现方式，这部分需要再多熟悉。
+2. 起初过于禁锢于找到某一个变量与质量之间的关系，当没有发现这个关系的时候有点束手无措
+3. 看到图形，好像只能看到其中的某一点特征，很难从一张图上找到多个分析的方向
+
+### 对未来工作的提议
+1. 起初有个预期能帮助我们明确第一步的行动，但不要过于禁锢于这个方向，当预期的结果没有出现时，应该立即转换方向，发散思维
+2. 需要练习从一张图上找到多个分析方向的能力
 
 
 
