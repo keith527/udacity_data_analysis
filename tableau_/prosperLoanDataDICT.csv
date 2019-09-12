@@ -1,0 +1,81 @@
+ListingKey,每个列表的唯一键，与API中列表对象中使用的“键”值相同。,"Unique key for each listing, same value as the 'key' used in the listing object in the API."
+ListingNumber,对外展示的唯一ID（订单号）,The number that uniquely identifies the listing to the public as displayed on the website.
+ListingCreationDate,创建日期,The date the listing was created.
+CreditGrade,信用评级,The Credit rating that was assigned at the time the listing went live. Applicable for listings pre-2009 period and will only be populated for those listings.
+Term,贷款期限（月）,The length of the loan expressed in months.
+LoanStatus,贷款状态（已取消，已收费，已完成，当前，违约，最终付款进度，逾期）,"The current status of the loan: Cancelled, Chargedoff, Completed, Current, Defaulted, FinalPaymentInProgress, PastDue. The PastDue status will be accompanied by a delinquency bucket."
+ClosedDate,结束日期（已取消，已完成，已抵押和违约的贷款状态）,"Closed date is applicable for Cancelled, Completed, Chargedoff and Defaulted loan statuses."
+BorrowerAPR,借款人的贷款年利率（APR）,The Borrower's Annual Percentage Rate (APR) for the loan.
+BorrowerRate,借款人对此贷款的利率,The Borrower's interest rate for this loan.
+LenderYield,贷款人的贷款收益率（贷方收益率等于贷款利率减去服务费）,The Lender yield on the loan. Lender yield is equal to the interest rate on the loan less the servicing fee.
+EstimatedEffectiveYield,有效收益率等于借款人利率（i）减去服务费率，（ii）减去未收取的未收取的撇帐利息，（iii）加上估计收取的滞纳金。适用于2009年7月以后发放的贷款,"Effective yield is equal to the borrower interest rate (i) minus the servicing fee rate, (ii) minus estimated uncollected interest on charge-offs, (iii) plus estimated collected late fees. Applicable for loans originated after July 2009."
+EstimatedLoss,估计损失是计算的主要损失（适用于2009年7月以后发放的贷款）,Estimated loss is the estimated principal loss on charge-offs. Applicable for loans originated after July 2009.
+EstimatedReturn,创建时分配给商家信息的估算回报（估计收益是估计有效收益率与估计损失率之间的差额。适用于2009年7月以后发放的贷款）,The estimated return assigned to the listing at the time it was created. Estimated return is the difference between the Estimated Effective Yield and the Estimated Loss Rate. Applicable for loans originated after July 2009.
+ProsperRating (numeric),评级（0  -  N / A，1  -  HR，2  -  E，3  -  D，4  -  C，5  -  B，6  -  A，7  -  AA）适用于2009年7月以后发放的贷款,"The Prosper Rating assigned at the time the listing was created: 0 - N/A, 1 - HR, 2 - E, 3 - D, 4 - C, 5 - B, 6 - A, 7 - AA. Applicable for loans originated after July 2009."
+ProsperRating (Alpha),在AA  -  HR之间创建列表时分配的Prosper评级。适用于2009年7月以后发放的贷款。,The Prosper Rating assigned at the time the listing was created between AA - HR. Applicable for loans originated after July 2009.
+ProsperScore,使用历史Prosper数据构建的自定义风险评分。得分范围从1-10，其中10是最佳或最低风险得分。适用于2009年7月以后发放的贷款。,"A custom risk score built using historical Prosper data. The score ranges from 1-10, with 10 being the best, or lowest risk score. Applicable for loans originated after July 2009."
+ListingCategory,借款人在上市时选择的房源类别：0  - 不可用，1  - 债务合并，2  - 家居装修，3  - 商业，4 __ - 个人贷款，5  - 学生使用，6  - 自动，7-其他，8  - 婴儿和领养，9  - 船，10  - 化妆品程序，11  - 订婚戒指，12  - 绿色贷款，13  - 家庭费用，14  - 大额购买，15  - 医疗/牙科，16  - 摩托车，17  - 房车，18  - 税，19  - 度假，20  - 婚礼贷款,"The category of the listing that the borrower selected when posting their listing: 0 - Not Available, 1 - Debt Consolidation, 2 - Home Improvement, 3 - Business, 4 - Personal Loan, 5 - Student Use, 6 - Auto, 7- Other, 8 - Baby&Adoption, 9 - Boat, 10 - Cosmetic Procedure, 11 - Engagement Ring, 12 - Green Loans, 13 - Household Expenses, 14 - Large Purchases, 15 - Medical/Dental, 16 - Motorcycle, 17 - RV, 18 - Taxes, 19 - Vacation, 20 - Wedding Loans"
+BorrowerState,创建清单时借款人地址的两个字母缩写,The two letter abbreviation of the state of the address of the borrower at the time the Listing was created.
+Occupation,借款人职业（创建贷款时）,The Occupation selected by the Borrower at the time they created the listing.
+EmploymentStatus,借款人就业状态（创建贷款时）,The employment status of the borrower at the time they posted the listing.
+EmploymentStatusDuration,借款人持续当前就业状态的时间（月）（创建贷款时）,The length in months of the employment status at the time the listing was created.
+IsBorrowerHomeowner,借款人是否为房主（如果借款人对其信用状况进行抵押或提供确认其为房主的文件，则该借款人将被归类为房主）,A Borrower will be classified as a homowner if they have a mortgage on their credit profile or provide documentation confirming they are a homeowner.
+CurrentlyInGroup,指定借款人在创建商家信息时是否在某个组中,Specifies whether or not the Borrower was in a group at the time the listing was created.
+GroupKey,借款人所属集团的关键。如果借款人没有集团所属关系，则值为空,The Key of the group in which the Borrower is a member of. Value will be null if the borrower does not have a group affiliation.
+DateCreditPulled,提取信用档案的日期,The date the credit profile was pulled.
+CreditScoreRangeLower,借款人的信用评级范围 - 下限,The lower value representing the range of the borrower's credit score as provided by a consumer credit rating agency.
+CreditScoreRangeUpper,借款人的信用评级范围 - 上限,The upper value representing the range of the borrower's credit score as provided by a consumer credit rating agency.
+FirstRecordedCreditLine,第一个信用额度开立的日期,The date the first credit line was opened.
+CurrentCreditLines,提取信用档案时的当前信用额度,Number of current credit lines at the time the credit profile was pulled.
+OpenCreditLines,提取信用档案时的未结信用额度,Number of open credit lines at the time the credit profile was pulled.
+TotalCreditLinespast7years,拉动信用状况时过去七年的信用额度,Number of credit lines in the past seven years at the time the credit profile was pulled.
+OpenRevolvingAccounts,提取信用档案时的开放循环帐户数,Number of open revolving accounts at the time the credit profile was pulled.
+OpenRevolvingMonthlyPayment,在提取信用档案时每月向循环账户付款,Monthly payment on revolving accounts at the time the credit profile was pulled.
+InquiriesLast6Months,提取信用状况时过去六个月的查询数量,Number of inquiries in the past six months at the time the credit profile was pulled.
+TotalInquiries,提取信用档案时的查询总数,Total number of inquiries at the time the credit profile was pulled.
+CurrentDelinquencies,提取信用档案时拖欠的帐户数量,Number of accounts delinquent at the time the credit profile was pulled.
+AmountDelinquent,在提取信用状况时拖欠美元,Dollars delinquent at the time the credit profile was pulled.
+DelinquenciesLast7Years,拉动信用状况时过去7年的拖欠数量,Number of delinquencies in the past 7 years at the time the credit profile was pulled.
+PublicRecordsLast10Years,拉动信用状况时过去10年的公共记录数量,Number of public records in the past 10 years at the time the credit profile was pulled.
+PublicRecordsLast12Months,提取信用档案时过去12个月的公共记录数量,Number of public records in the past 12 months at the time the credit profile was pulled.
+RevolvingCreditBalance,拉动信用状况时的循环信用美元,Dollars of revolving credit at the time the credit profile was pulled.
+BankcardUtilization,拉动信用状况时使用的可用循环信用百分比,The percentage of available revolving credit that is utilized at the time the credit profile was pulled.
+AvailableBankcardCredit,提取信用档案时通过银行卡提供的总可用信用额度,The total available credit via bank card at the time the credit profile was pulled.
+TotalTrades,拉动信用状况时开设的交易线数量,Number of trade lines ever opened at the time the credit profile was pulled.
+TradesNeverDelinquent,拉动信用状况时从未拖欠的交易数量,Number of trades that have never been delinquent at the time the credit profile was pulled.
+TradesOpenedLast6Months,拉动信用状况时过去6个月内开立的交易数量,Number of trades opened in the last 6 months at the time the credit profile was pulled.
+DebtToIncomeRatio,拉动信用状况时借款人的债务与收入比率。如果债务与收入比率不可用，则该值为空。该值上限为10.01（任何大于1000％的债务与收入比率将返回为1001％）,The debt to income ratio of the borrower at the time the credit profile was pulled. This value is Null if the debt to income ratio is not available. This value is capped at 10.01 (any debt to income ratio larger than 1000% will be returned as 1001%).
+IncomeRange,创建上市时借款人的收入范围,The income range of the borrower at the time the listing was created.
+IncomeVerifiable,借款人表示他们有必要的文件来支持他们的收入,The borrower indicated they have the required documentation to support their income.
+StatedMonthlyIncome,借款人在创建上市时所说的月收入,The monthly income the borrower stated at the time the listing was created.
+LoanKey,每笔贷款的唯一关键。这与API中使用的密钥相同,Unique key for each loan. This is the same key that is used in the API.
+TotalProsperLoans,借款人创建此列表时的Prosper贷款数量。如果借款人之前没有贷款，该值将为空,Number of Prosper loans the borrower at the time they created this listing. This value will be null if the borrower had no prior loans.
+TotalProsperPaymentsBilled,借款人在创建此列表时对Prosper贷款进行的付款次数。如果借款人之前没有贷款，该值将为空,Number of on time payments the borrower made on Prosper loans at the time they created this listing. This value will be null if the borrower had no prior loans.
+OnTimeProsperPayments,借款人在创建此列表时对Prosper贷款进行的准时付款次数。如果借款人之前没有贷款，该值将为空,Number of on time payments the borrower had made on Prosper loans at the time they created this listing. This value will be null if the borrower has no prior loans.
+ProsperPaymentsLessThanOneMonthLate,借款人在Prosper贷款上支付的款项，这些贷款在创建此列表时不到一个月。如果借款人之前没有贷款，该值将为空,Number of payments the borrower made on Prosper loans that were less than one month late at the time they created this listing. This value will be null if the borrower had no prior loans.
+ProsperPaymentsOneMonthPlusLate,借款人对Prosper贷款的支付数量，这些贷款在创建此列表时已超过一个月。如果借款人之前没有贷款，该值将为空,Number of payments the borrower made on Prosper loans that were greater than one month late at the time they created this listing. This value will be null if the borrower had no prior loans.
+ProsperPrincipalBorrowed,在创建上市时，Prosper贷款借入的总本金。如果借款人之前没有贷款，该值将为空,Total principal borrowed on Prosper loans at the time the listing was created. This value will be null if the borrower had no prior loans.
+ProsperPrincipalOutstanding,创建上市时Prosper贷款的未偿还本金。如果借款人之前没有贷款，该值将为空,Principal outstanding on Prosper loans at the time the listing was created. This value will be null if the borrower had no prior loans.
+ScorexChangeAtTimeOfListing,借款人在信用状况被取消时的信用评分发生变化。这将是相对于借款人最后一次Prosper贷款的变化。如果借款人之前没有贷款，该值将为空。,Borrower's credit score change at the time the credit profile was pulled. This will be the change relative to the borrower's last Prosper loan. This value will be null if the borrower had no prior loans.
+LoanCurrentDaysDelinquent,逾期的天数,The number of days delinquent.
+LoanFirstDefaultedCycleNumber,贷款的周期被收取。如果贷款没有收取费用，则该值将为空,The cycle the loan was charged off. If the loan has not charged off the value will be null.
+LoanMonthsSinceOrigination,自贷款发起以来的月数,Number of months since the loan originated.
+LoanNumber,与贷款相关的唯一数值,Unique numeric value associated with the loan.
+LoanOriginalAmount,贷款的起始金额,The origination amount of the loan.
+LoanOriginationDate,贷款发放的日期,The date the loan was originated.
+LoanOriginationQuarter,贷款发放的季度,The quarter in which the loan was originated.
+MemberKey,与借款人关联的唯一密钥。这与API成员对象中使用的标识符相同,The unique key that is associated with the borrower. This is the same identifier that is used in the API member object.
+MonthlyLoanPayment,预定的每月贷款支付,The scheduled monthly loan payment.
+LP_CustomerPayments,借款人对贷款的预付费累计总额。如果贷款被扣除，该值将排除任何回收,"Pre charge-off cumulative gross payments made by the borrower on the loan. If the loan has charged off, this value will exclude any recoveries."
+LP_CustomerPrincipalPayments,借款人对贷款进行的预付费累计本金支付。如果贷款被扣除，该值将排除任何回收,"Pre charge-off cumulative principal payments made by the borrower on the loan. If the loan has charged off, this value will exclude any recoveries."
+LP_InterestandFees,借款人预付的累计利息和费用。如果贷款被扣除，该值将排除任何回收,"Pre charge-off cumulative interest and fees paid by the borrower. If the loan has charged off, this value will exclude any recoveries."
+LP_ServiceFees,投资于贷款的投资者支付的累计服务费,Cumulative service fees paid by the investors who have invested in the loan.
+LP_CollectionFees,投资于贷款的投资者支付的累计收费,Cumulative collection fees paid by the investors who have invested in the loan.
+LP_GrossPrincipalLoss,贷款的总收费金额,The gross charged off amount of the loan.
+LP_NetPrincipalLoss,在任何追回之后仍未收回的本金,The principal that remains uncollected after any recoveries.
+LP_NonPrincipalRecoverypayments,任何恢复付款的利息和费用部分。当前的付款政策按以下顺序应用付款：费用，利息，本金,"The interest and fee component of any recovery payments. The current payment policy applies payments in the following order: Fees, interest, principal."
+PercentFunded,上市资金的百分比,Percent the listing was funded.
+Recommendations,借款人在创建上市时的建议数量,Number of recommendations the borrower had at the time the listing was created.
+InvestmentFromFriendsCount,投资贷款的朋友数量,Number of friends that made an investment in the loan.
+InvestmentFromFriendsAmount,由朋友投入的美元投资金额。,Dollar amount of investments that were made by friends.
+Investors,为贷款提供资金的投资者数量,The number of investors that funded the loan.
